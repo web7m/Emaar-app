@@ -1,15 +1,31 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Identity Badge</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Emaar Spaces</title>
+
+  <!-- App Icon for Home Screen -->
+  <link rel="apple-touch-icon" href="IMG_0953.webp">
+  <link rel="icon" type="image/webp" href="IMG_0953.webp">
+
+  <!-- PWA Fullscreen Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Emaar Spaces">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+  
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
     }
 
     body {
@@ -18,174 +34,801 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      color: #000;
     }
 
-    .container {
+    .app-screen {
       width: 100%;
-      max-width: 390px;
-      background-color: #ffffff;
-      min-height: 844px;
-      padding: 10px 20px 20px 20px; /* تم تقليل الـ padding العلوي لرفع المحتوى */
+      max-width: 414px;
+      background-color: #f6f6f8;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
       position: relative;
-      border-radius: 30px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      overflow: hidden;
     }
 
-    /* --- الهيدر العلوي تم رفعه وتقليل مسافاته --- */
-    .header {
+    /* Views Logic */
+    .view-page {
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 100vh;
+      width: 100%;
+      padding: 0px 20px 24px 20px; /* تم تقليل الـ padding العلوي لتسهيل رفع الهيدر */
+    }
+
+    .view-page.active {
+      display: flex;
+    }
+
+    /* =======================================
+       1. HOME DASHBOARD STYLES
+       ======================================= */
+    .home-header {
       display: flex;
       align-items: center;
-      padding-top: 0px;    /* تم إلغاء المسافة من الأعلى لرفعه تماماً */
-      padding-bottom: 5px;  /* تقليل المسافة أسفله */
-      margin-top: -5px;     /* إزاحة خفيفة لأعلى */
-      position: relative;
+      justify-content: space-between;
+      padding-top: 16px;
+      padding-bottom: 20px;
     }
 
-    .back-btn {
+    .menu-btn {
       background: none;
       border: none;
-      font-size: 20px;
       cursor: pointer;
-      color: #000;
-      position: absolute;
-      left: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      padding: 4px 0;
+    }
+
+    .menu-btn span {
+      display: block;
+      width: 19px;
+      height: 1.8px;
+      background-color: #111;
+      border-radius: 2px;
+    }
+
+    .home-title {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: 19px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
       display: flex;
       align-items: center;
+      gap: 6px;
+      color: #111;
     }
 
-    .header-title {
-      width: 100%;
-      text-align: center;
-      font-size: 20px;
-      font-weight: 700;
+    .home-title-arrow {
+      width: 10px;
+      height: 6px;
+      fill: none;
+      stroke: #111;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .notification-btn {
+      background: none;
+      border: none;
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px;
+    }
+
+    .notification-icon {
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: #111;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: 1px;
+      right: 1px;
+      width: 7px;
+      height: 7px;
+      background-color: #e02020;
+      border-radius: 50%;
+    }
+
+    /* User Profile & Badge Card */
+    .user-card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      margin-bottom: 16px;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .user-avatar-placeholder {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background-color: #e5e5ea;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #8e8e93;
+    }
+
+    .hello-text {
+      font-size: 13px;
+      color: #777;
+      margin-bottom: 2px;
+    }
+
+    .username-text {
+      font-size: 15px;
+      font-weight: 600;
       color: #000;
-      font-family: "Georgia", serif; /* مطابقة خط العنوان للسكيل */
+      letter-spacing: -0.2px;
     }
 
-    /* --- كارت صورة الهوية والمعلومات --- */
-    .badge-card {
-      margin-top: 20px; /* تقليل المسافة بين العنوان والصورة */
+    .unit-details {
+      display: flex;
+      gap: 4px;
+      font-size: 11px;
+      color: #666;
+    }
+
+    .id-badge-btn {
       display: flex;
       flex-direction: column;
       align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      background: none;
+      border: none;
     }
 
-    .profile-avatar {
-      width: 240px;
-      height: 240px;
+    .id-icon-box {
+      border: 1px solid #dcdcdc;
+      border-radius: 8px;
+      padding: 5px 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #fff;
+    }
+
+    .id-badge-text {
+      font-size: 10px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    /* Grid Options */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .grid-item {
+      background: #555756;
+      color: #ffffff;
+      border-radius: 16px;
+      height: 92px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: -0.1px;
+    }
+
+    .grid-item svg {
+      width: 24px;
+      height: 24px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.6;
+    }
+
+    /* Middle Banner Logo */
+    .banner-card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 24px 20px 14px 20px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      margin-bottom: 20px;
+    }
+
+    .banner-logo-title {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: 24px;
+      letter-spacing: 5px;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    .banner-logo-sub {
+      font-size: 9px;
+      letter-spacing: 4px;
+      color: #555;
+      font-weight: 600;
+      margin-top: 2px;
+      margin-bottom: 22px;
+    }
+
+    .banner-links {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      color: #555;
+      border-top: 0.5px solid #eaeaea;
+      padding-top: 12px;
+      font-weight: 500;
+    }
+
+    /* Notices Section */
+    .notices-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .notices-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #000;
+    }
+
+    .view-all {
+      font-size: 12px;
+      color: #666;
+      font-weight: 500;
+    }
+
+    .notice-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    }
+
+    .notice-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .notice-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #e5e5ea;
+    }
+
+    .notice-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #000;
+    }
+
+    .notice-time {
+      font-size: 11px;
+      color: #8e8e93;
+    }
+
+    /* =======================================
+       2. IDENTITY BADGE PAGE STYLES (تعديل الرفع)
+       ======================================= */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 0px; /* إلغاء المساحة العلوية لرفعه لأعلى الشاشة */
+      padding-bottom: 5px;
+      margin-top: -10px; /* سحب الهيدر لأعلى */
+    }
+
+    .back-btn {
+      font-size: 22px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #000;
+      font-weight: 400;
+      padding: 0 5px;
+    }
+
+    .header-title {
+      font-size: 20px;
+      font-weight: 600;
+      font-family: "Playfair Display", Georgia, serif;
+      letter-spacing: -0.3px;
+      flex-grow: 1;
+      text-align: center;
+      margin-right: 20px;
+      color: #000;
+    }
+
+    .badge-card {
+      background-color: #f1f6f4;
+      border-radius: 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 50px; /* رفع الكارت تليها */
+      position: relative;
+    }
+
+    .profile-container {
+      margin-top: -55px;
+      margin-bottom: 15px;
+      z-index: 10;
+      position: relative;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      overflow: hidden;
+      background-color: #f1f6f4;
+    }
+
+    .profile-img {
+      width: 100%;
+      height: 100%;
       border-radius: 50%;
       object-fit: cover;
-      border: 15px solid #dcd7c9;
-      margin-bottom: 25px;
+      display: block;
+      border: 7px solid #b2b6b8;
+      box-sizing: border-box;
     }
 
-    .info-box {
+    .info-banner {
       width: 100%;
-      background-color: #72e096; /* لون اسم المستخدم الأخضر */
-      padding: 12px 16px;
-      border-radius: 4px;
-      margin-bottom: 15px;
+      background-color: #72db8c;
+      padding: 10px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .info-group {
+      display: flex;
+      flex-direction: column;
     }
 
     .info-label {
       font-size: 13px;
-      color: #333;
-      margin-bottom: 2px;
+      color: #24522b;
+      margin-bottom: 3px;
+      font-weight: 400;
     }
 
     .info-value {
-      font-size: 17px;
-      font-weight: bold;
-      color: #000;
-    }
-
-    .unit-box {
-      width: 100%;
-      padding: 5px 16px 15px 16px;
-      margin-bottom: 20px;
-    }
-
-    .unit-box .info-value {
       font-size: 16px;
+      font-weight: 700;
+      color: #000;
+      letter-spacing: -0.3px;
     }
 
-    /* --- الزرار والملاحظات --- */
+    .unit-section {
+      width: 100%;
+      padding: 14px 18px 18px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #f1f6f4;
+      border-bottom-left-radius: 28px;
+      border-bottom-right-radius: 28px;
+    }
+
+    .unit-value {
+      font-size: 16px;
+      font-weight: 800;
+      color: #000;
+      letter-spacing: -0.3px;
+    }
+
+    .logo-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid #d0d5d3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 7px;
+      font-weight: 700;
+      color: #555;
+      background: #f1f6f4;
+      text-align: center;
+    }
+
+    .action-container {
+      margin-top: 22px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
     .open-gate-btn {
       width: 100%;
-      background-color: #555555;
+      background-color: #555756;
       color: #ffffff;
       border: none;
-      padding: 14px;
-      border-radius: 10px;
+      border-radius: 14px;
+      padding: 15px;
       font-size: 16px;
       font-weight: 600;
       cursor: pointer;
-      margin-bottom: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 52px;
     }
 
-    .disclaimer {
-      font-size: 11px;
-      color: #555;
+    .open-gate-btn:active {
+      background-color: #3d3e3d;
+    }
+
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #ffffff;
+      animation: spin 0.8s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .fine-notice {
+      font-size: 12px;
+      color: #222;
       text-align: center;
-      line-height: 1.3;
-      padding: 0 10px;
-      margin-bottom: 40px;
+      line-height: 1.35;
+      max-width: 88%;
+      font-weight: 500;
     }
 
-    .brand-logo {
+    .footer {
       text-align: center;
-      margin-top: auto;
+      padding-bottom: 10px;
+      margin-top: 20px;
     }
 
-    .brand-logo h3 {
-      letter-spacing: 4px;
-      font-size: 18px;
-      font-family: "Georgia", serif;
+    .emaar-logo {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: 22px;
+      letter-spacing: 5px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .emaar-sub {
+      font-size: 8px;
+      letter-spacing: 3.5px;
+      color: #666;
+      margin-top: 1px;
+      font-weight: 600;
+    }
+
+    /* Modal Overlay */
+    .modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.18);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .ios-alert {
+      width: 270px;
+      background-color: rgba(248, 248, 248, 0.96);
+      border-radius: 14px;
+      text-align: center;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      animation: popup 0.15s ease-out;
+    }
+
+    @keyframes popup {
+      from { transform: scale(1.08); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .ios-alert-content {
+      padding: 22px 16px;
+    }
+
+    .ios-alert-title {
+      font-size: 17px;
+      font-weight: 600;
       color: #000;
+      letter-spacing: -0.4px;
     }
 
-    .brand-logo p {
-      font-size: 9px;
-      letter-spacing: 2px;
-      color: #555;
+    .ios-alert-btn {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-top: 0.5px solid #d1d1d6;
+      color: #007aff;
+      font-size: 17px;
+      font-weight: 600;
+      padding: 12px 0;
+      cursor: pointer;
+    }
+
+    .ios-alert-btn:active {
+      background-color: #e5e5ea;
     }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <!-- الجزء العلوي (Identity Badge) -->
-    <div class="header">
-      <button class="back-btn">&lt;</button>
-      <h1 class="header-title">Identity Badge</h1>
+  <div class="app-screen">
+
+    <!-- PAGE 1: HOME DASHBOARD -->
+    <div class="view-page active" id="homePage">
+      <div>
+        <!-- Home Header -->
+        <div class="home-header">
+          <button class="menu-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          
+          <div class="home-title">
+            Emaar Spaces
+            <svg class="home-title-arrow" viewBox="0 0 10 6">
+              <polyline points="1 1 5 5 9 1"></polyline>
+            </svg>
+          </div>
+
+          <button class="notification-btn">
+            <svg class="notification-icon" viewBox="0 0 24 24">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <div class="notification-badge"></div>
+          </button>
+        </div>
+
+        <!-- User Card -->
+        <div class="user-card">
+          <div class="user-info">
+            <div class="user-avatar-placeholder">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="hello-text">Hello</div>
+              <div class="username-text">Mohamed Elattar</div>
+              <div class="unit-details">
+                <span class="label">Unit</span>
+                <span class="value">VIDA Marina-SA-TL-33</span>
+              </div>
+            </div>
+          </div>
+          <button class="id-badge-btn" id="goToBadgeBtn">
+            <div class="id-icon-box">
+              <svg width="18" height="14" viewBox="0 0 24 18" fill="none" stroke="#222" stroke-width="2">
+                <rect x="1" y="1" width="22" height="16" rx="3"/>
+                <circle cx="7" cy="8" r="3"/>
+                <line x1="13" y1="7" x2="19" y2="7"/>
+                <line x1="13" y1="11" x2="17" y2="11"/>
+              </svg>
+            </div>
+            <span class="id-badge-text">ID Badge</span>
+          </button>
+        </div>
+
+        <!-- Options Grid -->
+        <div class="grid-container">
+          <div class="grid-item">
+            <svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+            Services
+          </div>
+          <div class="grid-item">
+            <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Requests
+          </div>
+          <div class="grid-item">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/><path d="M12 8v4M12 16h.01"/></svg>
+            Feedback
+          </div>
+          <div class="grid-item">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+            Visitor Pass
+          </div>
+          <div class="grid-item">
+            <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            Violations
+          </div>
+        </div>
+
+        <!-- Center Branding Banner -->
+        <div class="banner-card">
+          <div class="banner-logo-title">EMAAR</div>
+          <div class="banner-logo-sub">SPACES</div>
+          <div class="banner-links">
+            <span>emaarmisr.com</span>
+            <span>EMAAR</span>
+            <span>16116</span>
+          </div>
+        </div>
+
+        <!-- Notices Section -->
+        <div>
+          <div class="notices-header">
+            <span class="notices-title">Notices</span>
+            <span class="view-all">View All</span>
+          </div>
+          <div class="notice-card">
+            <div class="notice-info">
+              <div class="notice-avatar"></div>
+              <div>
+                <div class="notice-name">Emaar Misr</div>
+                <div class="notice-time">12 Days Ago</div>
+              </div>
+            </div>
+            <svg width="14" height="18" viewBox="0 0 14 18" fill="none">
+              <path d="M7 0C3.13 0 0 3.13 0 7c0 5.25 7 11 7 11s7-5.75 7-11c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z" fill="#007AFF"/>
+            </svg>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- كارت الهوية -->
-    <div class="badge-card">
-      <img src="your-photo.jpg" alt="Profile" class="profile-avatar">
 
-      <div class="info-box">
-        <div class="info-label">Username</div>
-        <div class="info-value">Mohamed Elattar</div>
+    <!-- PAGE 2: IDENTITY BADGE PAGE -->
+    <div class="view-page" id="badgePage">
+      <div>
+        <div class="header">
+          <button class="back-btn" id="backToHomeBtn">&#10094;</button>
+          <div class="header-title">Identity Badge</div>
+        </div>
+
+        <div class="badge-card">
+          <div class="profile-container">
+            <img src="IMG_0957.jpeg" alt="Profile" class="profile-img">
+          </div>
+
+          <div class="info-banner">
+            <div class="info-group">
+              <span class="info-label">Username</span>
+              <span class="info-value">Mohamed Elattar</span>
+            </div>
+            <div class="info-group" style="text-align: right;">
+              <span class="info-label">Type</span>
+              <span class="info-value">Resident</span>
+            </div>
+          </div>
+
+          <div class="unit-section">
+            <div class="info-group">
+              <span class="info-label">Unit</span>
+              <span class="unit-value">VIDA Marina-SA-TL-33</span>
+            </div>
+            <div class="logo-badge">MARASSI</div>
+          </div>
+        </div>
+
+        <div class="action-container">
+          <button class="open-gate-btn" id="openGateBtn">
+            <span id="btnText">Open Gate</span>
+            <div class="spinner" id="btnSpinner"></div>
+          </button>
+          <p class="fine-notice">
+            Any proven manipulation of this identity will result in a EGP 30,000 fine and user suspension.
+          </p>
+        </div>
       </div>
 
-      <div class="unit-box">
-        <div class="info-label">Unit</div>
-        <div class="info-value">VIDA Marina-SA-TL-33</div>
-      </div>
-
-      <button class="open-gate-btn">Open Gate</button>
-
-      <p class="disclaimer">
-        Any proven manipulation of this identity card will result in a EGP 30,000 fine and user suspension.
-      </p>
-
-      <div class="brand-logo">
-        <h3>EMAAR</h3>
-        <p>MISR</p>
+      <div class="footer">
+        <div class="emaar-logo">EMAAR</div>
+        <div class="emaar-sub">MISR</div>
       </div>
     </div>
+
+    <!-- Modal Alert Overlay -->
+    <div class="modal-overlay" id="alertModal">
+      <div class="ios-alert">
+        <div class="ios-alert-content">
+          <div class="ios-alert-title">Gate not in range</div>
+        </div>
+        <button class="ios-alert-btn" id="closeModalBtn">Ok</button>
+      </div>
+    </div>
+
   </div>
+
+  <script>
+    // Navigation Logic
+    const homePage = document.getElementById('homePage');
+    const badgePage = document.getElementById('badgePage');
+    const goToBadgeBtn = document.getElementById('goToBadgeBtn');
+    const backToHomeBtn = document.getElementById('backToHomeBtn');
+
+    goToBadgeBtn.addEventListener('click', () => {
+      homePage.classList.remove('active');
+      badgePage.classList.add('active');
+    });
+
+    backToHomeBtn.addEventListener('click', () => {
+      badgePage.classList.remove('active');
+      homePage.classList.add('active');
+    });
+
+    // Gate Button & Alert Logic
+    const openGateBtn = document.getElementById('openGateBtn');
+    const btnText = document.getElementById('btnText');
+    const btnSpinner = document.getElementById('btnSpinner');
+    const alertModal = document.getElementById('alertModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+
+    openGateBtn.addEventListener('click', () => {
+      if (openGateBtn.classList.contains('loading')) return;
+
+      openGateBtn.classList.add('loading');
+      btnText.style.display = 'none';
+      btnSpinner.style.display = 'block';
+
+      setTimeout(() => {
+        openGateBtn.classList.remove('loading');
+        btnText.style.display = 'inline';
+        btnSpinner.style.display = 'none';
+
+        alertModal.classList.add('active');
+      }, 2500); 
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+      alertModal.classList.remove('active');
+    });
+  </script>
 
 </body>
 </html>
