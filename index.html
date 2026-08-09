@@ -20,9 +20,28 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
   
   <style>
-    .badge-card img, .avatar-container, img {
-    position: relative !important;
-    z-index: 999 !important;
+   /* إزالة الخلفية البيضاء والإطار من الصورة وحاويتها */
+  .badge-card img, 
+  .avatar-container, 
+  .badge-avatar, 
+  div[class*="avatar"], 
+  div[class*="profile"] {
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+  }
+
+  /* جعل الصورة تملأ الدائرة بالكامل */
+  .badge-card img, 
+  .avatar-container img, 
+  .badge-avatar img {
+    object-fit: cover !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
   }
 
     * {
