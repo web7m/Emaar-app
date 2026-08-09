@@ -20,11 +20,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
   
   <style>
-  img {
-    mix-blend-mode: multiply !important;
-    background-color: transparent !important;
-  }
-
     * {
       box-sizing: border-box;
       margin: 0;
@@ -189,6 +184,13 @@
       font-weight: 600;
       color: #000;
       letter-spacing: -0.2px;
+    }
+
+    .unit-details {
+      display: flex;
+      gap: 4px;
+      font-size: 11px;
+      color: #666;
     }
 
     .id-badge-btn {
@@ -378,7 +380,6 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      overflow: hidden;
       margin-top: 40px;
       position: relative;
     }
@@ -386,16 +387,23 @@
     .profile-container {
       margin-top: -55px;
       margin-bottom: 15px;
-      z-index: 2;
+      z-index: 10;
+      position: relative;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      overflow: hidden;
+      background-color: #f1f6f4;
     }
 
     .profile-img {
-      width: 290px;
-      height: 290px;
+      width: 100%;
+      height: 100%;
       border-radius: 50%;
       object-fit: cover;
       display: block;
       border: 7px solid #b2b6b8;
+      box-sizing: border-box;
     }
 
     .info-banner {
@@ -405,6 +413,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      position: relative;
+      z-index: 1;
     }
 
     .info-group {
@@ -433,6 +443,8 @@
       justify-content: space-between;
       align-items: center;
       background-color: #f1f6f4;
+      border-bottom-left-radius: 28px;
+      border-bottom-right-radius: 28px;
     }
 
     .unit-value {
@@ -633,11 +645,10 @@
             <div>
               <div class="hello-text">Hello</div>
               <div class="username-text">Mohamed Elattar</div>
-            <div class="unit-details">
-  <span class="label">Unit</span>
-  <span class="value">VIDA Marina-SA-TL-33</span>
-</div>
-
+              <div class="unit-details">
+                <span class="label">Unit</span>
+                <span class="value">VIDA Marina-SA-TL-33</span>
+              </div>
             </div>
           </div>
           <button class="id-badge-btn" id="goToBadgeBtn">
