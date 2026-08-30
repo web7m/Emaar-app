@@ -50,11 +50,6 @@
       background-size: cover;
       background-position: center;
       z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      align-items: center;
-      padding-bottom: 50px;
       transition: opacity 0.6s ease, visibility 0.6s ease;
     }
 
@@ -62,26 +57,6 @@
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
-    }
-
-    .splash-logo {
-      text-align: center;
-      color: #ffffff;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-    }
-
-    .splash-logo-title {
-      font-family: "Playfair Display", Georgia, serif;
-      font-size: 32px;
-      letter-spacing: 7px;
-      font-weight: 600;
-    }
-
-    .splash-logo-sub {
-      font-size: 11px;
-      letter-spacing: 5px;
-      font-weight: 600;
-      margin-top: 2px;
     }
 
     .app-screen {
@@ -667,7 +642,7 @@
   <div class="app-screen">
 
     <!-- SPLASH SCREEN -->
-    <div class="splash-screen" id="splashScreen">
+    <div class="splash-screen" id="splashScreen"></div>
 
     <!-- PAGE 1: HOME DASHBOARD -->
     <div class="view-page active" id="homePage">
@@ -851,7 +826,7 @@
       setTimeout(() => {
         const splash = document.getElementById('splashScreen');
         splash.classList.add('hidden');
-      }, 2000); // تختفي بعد ثانيتين
+      }, 2000);
     });
 
     const homePage = document.getElementById('homePage');
@@ -866,6 +841,7 @@
 
     backToHomeBtn.addEventListener('click', () => {
       badgePage.classList.remove('active');
+      homePage.classList.active;
       homePage.classList.add('active');
     });
 
@@ -898,4 +874,3 @@
 
 </body>
 </html>
- 
